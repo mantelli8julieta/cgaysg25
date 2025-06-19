@@ -22,14 +22,29 @@ let lineasV = [];
 
 //let lineasH;
 
-//ola recién entro. que agregaste del otro archivo hasta ahora?
-//si lo ejecutás ahí vas a ver q parece como los teles viejos a, xq se dibujan una y otra
-//vez las lineas en distuntas posiciones
 
-//lo q se me ocurrió es crear las líneas como objetos en un arreglo, y q cada línea tenga
-//un atributo x, un atributo y y así,,, no sé si me explico
+//para la carga d las ramitas a generar
+function preloadImg(url)
+{
+    var imagen=new Imagen(url);
+    imagen.src=url;
+    return imagen;
+}
 
-// sisisi, creo q en el otro programa el cpodigo q generé ttrataba d hacer lo mismo
+/*
+let myImage = preloadImage('path/to/image.jpg');
+document.body.appendChild(myImage); 
+^^^ código a usar para llamar a esas imgs:
+*/
+
+let rama1 = preloadImg('tp1\imgs\rama1.png');
+document.body.appendChild(ramauno); 
+
+let rama2 = preloadImg('tp1\imgs\rama2.png');
+document.body.appendChild(ramados); 
+
+let rama3 = preloadImage('tp1\imgs\rama3.png');
+document.body.appendChild(ramatres); 
 
 function setup() {
   createCanvas(windowWidth, windowHeight); //usamos el tamaño de la ventana
@@ -64,7 +79,6 @@ function setup() {
   //lineasH = floor(random(1, 3));
 
 }
-
 
 function draw() {
   if (calibracion == true){
@@ -108,3 +122,8 @@ function keyPressed(){
 function mousePressed(){
   //calibrador.activarBotonMin();
 }
+
+//recreación de la función map d processing para facilitarnos generar las ramas
+
+function mapeado(value, start1, stop1, start2, stop2) {
+  return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));}
