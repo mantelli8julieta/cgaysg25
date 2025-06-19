@@ -20,34 +20,23 @@ let lineasH = [];
 let cantLineasV;
 let lineasV = [];
 
+let ramasGen = []; //array que va a contener las ramas nuevas que se generen
+let imgRamas = [];
+
 //let lineasH;
 
-
-//para la carga d las ramitas a generar
-function preloadImg(url)
-{
-    var imagen=new Imagen(url);
-    imagen.src=url;
-    return imagen;
+function preload(){
+let rama1 = loadImage('imgs/rama1.png');
+let rama2 = loadImage('imgs/rama2.png');  
+let rama3 = loadImage('imgs/rama3.png');
 }
-
-/*
-let myImage = preloadImage('path/to/image.jpg');
-document.body.appendChild(myImage); 
-^^^ código a usar para llamar a esas imgs:
-*/
-
-let rama1 = preloadImg('tp1\imgs\rama1.png');
-document.body.appendChild(ramauno); 
-
-let rama2 = preloadImg('tp1\imgs\rama2.png');
-document.body.appendChild(ramados); 
-
-let rama3 = preloadImage('tp1\imgs\rama3.png');
-document.body.appendChild(ramatres); 
 
 function setup() {
   createCanvas(windowWidth, windowHeight); //usamos el tamaño de la ventana
+
+imgRamas[0] = loadImage('imgs/rama1.png');
+imgRamas[1] = loadImage('imgs/rama2.png');    
+imgRamas[2] = loadImage('imgs/rama3.png');
 
   cantLineasV = random(1, 2);
   cantLineasH = random(2, 5);
@@ -97,6 +86,9 @@ function draw() {
     }
 
   }
+
+  //console.log("la línea 1 empieza en " + lineasH[0].x1 + " y " + lineasH[0].x2 + " y termina en " + lineasH[1].y1 + " y " + lineasH[1].y2);
+//console.log("mousex es " + mouseX + " y mouseY es " + mouseY);
 }
 
 function keyPressed(){
@@ -113,7 +105,6 @@ function keyPressed(){
     //calibrador.desactivarBotonMin();  
   }
   
-
   if(key >= '0' && key <= '9' || key=== '.'){
     //calibrador.ingresarValorMin(key);
   }
@@ -121,11 +112,17 @@ function keyPressed(){
 
 function mousePressed(){
   //calibrador.activarBotonMin();
+
+  //voy a probar la generación d las ramas nuevas con clicks pq no me doy idea de como integrarlo con el input del mic :p
+  for (let h of lineasH){
+    let angulo = atan2(h.y2 - h.y1, h.x2 - h.x1);
+    let nuevaRama = new RamasNuevas(lineasH.this.x2, lineasH.this.h.y2, lineasH.this.angulo, imgRamas); 
+    ramasGen.push(nuevaRama);
+}
 }
 
-//recreación de la función map d processing para facilitarnos generar las ramas
-
+/*recreación de la función map d processing para facilitarnos generar las ramas
 function mapeado(value, start1, stop1, start2, stop2) {
   return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));}
-
-  console.log
+*/
+  
