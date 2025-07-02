@@ -4,6 +4,8 @@ class LineaPrincipal{
         this.x2 = random(margenX, width-margenX);
         this.y1 = random(margenY, (height/4)-margenY);
         this.y2 = random((height/4)*3, height-margenY);
+        this.angulo = atan2(this.y2 - this.y1, this.x2 - this.x1)
+
     }
 
     dibujar(){
@@ -12,6 +14,7 @@ class LineaPrincipal{
         pop();
 
         line(this.x1, this.y1, this.x2, this.y2);
-    
     }
+    
+
 }

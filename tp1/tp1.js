@@ -2,6 +2,8 @@
 
 //variables
 let micro; //input del micrófono
+let fft; // function for threshold 
+let micActivo = false;
 let intensidad; //variable que va a contener qué tan fuerte es el sonido
 let calibracion; //si se está ejecutando la calibración o no
 let calibrador; //objeto calibrador
@@ -14,6 +16,7 @@ let margenYH;
 let margenXV;
 let margenXH;
 
+
 let cantLineasH;
 let lineasH = [];
 
@@ -21,25 +24,28 @@ let cantLineasV;
 let lineasV = [];
 
 let ramasGen = []; //array que va a contener las ramas nuevas que se generen
-let imgRamas = [];
 
 //let lineasH;
 
-function preload(){
+/*function preload(){
 let rama1 = loadImage('imgs/rama1.png');
 let rama2 = loadImage('imgs/rama2.png');  
 let rama3 = loadImage('imgs/rama3.png');
 }
+*/
 
 function setup() {
-  createCanvas(windowWidth, windowHeight); //usamos el tamaño de la ventana
+  createCanvas(900, 900); //usamos el tamaño de la ventana
 
-imgRamas[0] = loadImage('imgs/rama1.png');
+fft = new p5.FFT();
+
+/*imgRamas[0] = loadImage('imgs/rama1.png');
 imgRamas[1] = loadImage('imgs/rama2.png');    
 imgRamas[2] = loadImage('imgs/rama3.png');
+*/
 
-  cantLineasV = random(1, 2);
-  cantLineasH = random(2, 5);
+  cantLineasV = floor(random(1, 2));
+  cantLineasH = floor(random(2, 5));
 
   margenXV = width/3;
   margenYV = 100;
@@ -62,6 +68,12 @@ imgRamas[2] = loadImage('imgs/rama3.png');
     lineasH[i] = new LineaHorizontal(margenXH,margenYH,cantLineasH,i);
   }
 
+lineasV.push({
+
+
+
+})
+
   calibracion = false;
   calibrador = new Calibrador(micro,ampMin);
 
@@ -70,6 +82,21 @@ imgRamas[2] = loadImage('imgs/rama3.png');
 }
 
 function draw() {
+
+    if (!micActivo) return;
+
+  let vol = mic.getLevel();
+  let spectrum = fft.analyze();
+  let graves = fft.getEnergy("bass");
+  let agudos = fft.getEnergy("treble");
+
+  //parámetros para la clase de ramas nuevas
+let baseX1 = lineasV[0].x1;
+let baseX2 = lineasV[0].x2;
+let baseY1 = lineasV[0].y1;
+let baseY2 = lineasV[0].y2;
+let angBase = lineasV[0].angulo;
+
   if (calibracion == true){
     calibrador.interfaz();
   }else{
@@ -85,9 +112,20 @@ function draw() {
       lineasH[i].dibujar();
     }
 
+      if (vol > threshold) {
+    for (let v of lineasV) {
+      ramasGen.push(new RamasNuevas(v.x2, v.y2, vol, graves, agudos));
+    }
+
+     for (let i = ramasGen.length - 1; i >= 0; i--) {
+    ramas[i].dibujar();
+    if (ramas[i].terminada()) ramas.splice(i, 1);
   }
 
-  //console.log("la línea 1 empieza en " + lineasH[0].x1 + " y " + lineasH[0].x2 + " y termina en " + lineasH[1].y1 + " y " + lineasH[1].y2);
+  }
+}
+
+//console.log("la línea 1 empieza en " + lineasH[0].x1 + " y " + lineasH[0].x2 + " y termina en " + lineasH[1].y1 + " y " + lineasH[1].y2);
 //console.log("mousex es " + mouseX + " y mouseY es " + mouseY);
 }
 
@@ -114,15 +152,14 @@ function mousePressed(){
   //calibrador.activarBotonMin();
 
   //voy a probar la generación d las ramas nuevas con clicks pq no me doy idea de como integrarlo con el input del mic :p
-  for (let h of lineasH){
-    let angulo = atan2(h.y2 - h.y1, h.x2 - h.x1);
-    let nuevaRama = new RamasNuevas(lineasH.this.x2, lineasH.this.h.y2, lineasH.this.angulo, imgRamas); 
-    ramasGen.push(nuevaRama);
-}
+  //input 1: generación de ramas sobre la primer línea base vertical
+
+
 }
 
+
 /*recreación de la función map d processing para facilitarnos generar las ramas
-function mapeado(value, start1, stop1, start2, stop2) {
+function mapeado(value, start1, stop1, start2, stop2) 
   return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));}
 */
   
